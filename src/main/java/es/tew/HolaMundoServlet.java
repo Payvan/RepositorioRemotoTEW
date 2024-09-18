@@ -31,5 +31,23 @@ public class HolaMundoServlet extends HttpServlet {
         out.println("Bienvenido a mi primera página Web!");
         out.println("</BODY></HTML>");
 
+        Vector<String> listado = (Vector<String>) req.getSession().getAttribute("listado");
+        if (listado == null) {
+            listado = new Vector<String>();
+        }
+
+        if ( nombre != null ){
+            out.println("<br>Hola "+nombre+"<br>");
+            listado.addElement(nombre);
+        }
+
+        req.getSession().setAttribute("listado",listado);
+
+        out.println("<br>");
+        out.println("Contigo, hoy me han visitado:<br>");
+        for ( int i = 0 ; i < listado.size() ; i++ ){
+            out.println("<br>"+(String)listado.elementAt(i));
+        }
+
     }
 }
