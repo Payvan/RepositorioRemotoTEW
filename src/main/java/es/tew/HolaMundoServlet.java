@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Vector;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -22,14 +23,6 @@ public class HolaMundoServlet extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
-        out.println("<HTML>");
-        out.println("<HEAD><TITLE>Hola Mundo!</TITLE></HEAD>");
-        out.println("<BODY>");
-        if (nombre != null) {
-            out.println("<br>Hola " + nombre + "<br>");
-        }
-        out.println("Bienvenido a mi primera página Web!");
-        out.println("</BODY></HTML>");
 
         Vector<String> listado = (Vector<String>) req.getSession().getAttribute("listado");
         if (listado == null) {
@@ -37,17 +30,12 @@ public class HolaMundoServlet extends HttpServlet {
         }
 
         if (nombre != null) {
-            out.println("<br>Hola " + nombre + "<br>");
             listado.addElement(nombre);
         }
 
         req.getSession().setAttribute("listado", listado);
 
-        out.println("<br>");
-        out.println("Contigo, hoy me han visitado:<br>");
-        for (int i = 0; i < listado.size(); i++) {
-            out.println("<br>" + (String) listado.elementAt(i));
-        }
+       
 
         Integer contador = (Integer) getServletContext().getAttribute("contador");
         if (contador == null) {
@@ -59,7 +47,9 @@ public class HolaMundoServlet extends HttpServlet {
         contador++;
         getServletContext().setAttribute("contador", contador);
 
-        out.println("<br><br>" + contador +" visitas");
+
+        RequestDispatcher dispatcher = getServletContext().getNamedDispatcher("HolaMundoVista");
+        dispatcher.forward(req, resp);
 
     }
 }
